@@ -12,11 +12,11 @@ try:
     df = fl.load(sys.argv[1])
     courses = df.iloc[:, 6:].columns
     print(courses)
-    for j in range(0, len(courses)):
-        fig, ax = plt.subplots(3, 4)
-        for i in range(0, len(courses)):
-            if (i != j):
-                sns.scatterplot(data=df, x=courses[i], y=courses[j], ax=ax[(i - (i>j))//4][(i - (i>j))%4], hue="Hogwarts House", palette="rocket", marker='.')
-        plt.show()
+    fig, ax = plt.subplots(3, 4)
+    for i in range(0, len(courses)):
+        if (i != 1):
+            sns.scatterplot(data=df, x=courses[i], y=courses[1], ax=ax[(i - (i>1))//4][(i - (i>1))%4], hue="Hogwarts House", palette="rocket", marker='.')
+    plt.subplots_adjust(left=0.05, right=0.99, top=0.99, bottom=0.06)
+    plt.show()
 except Exception as e:
     print(e)
