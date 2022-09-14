@@ -29,17 +29,31 @@ class TinyStatistician:
             return None
 
     def median(self, x):
-        return(self.percentile(x, 50))
-
-    def quartile(self, x):
-        tmp = self.percentile(x, 25)
-        return([tmp, self.percentile(x, 75)] if tmp is not None else None)
-
-    def percentile(self, x, p):
         try:
-            tmp = self.check_format(x, p)
+            tmp = self.check_format(x)
             x2 = np.sort(tmp)
-            return x2[int(len(tmp) * p / 100) if p < 100 else len(tmp) - 1]
+            q = (len(x2) + 1) / 2
+            return x2[math.floor(q) - 1] * (q - int(q)) + x2[math.ceil(q) - 1] * (1 - q + int(q))
+        except Exception as e:
+            print("Error : ", e)
+            return None
+
+    def quartile1(self, x):
+        try:
+            tmp = self.check_format(x)
+            x2 = np.sort(tmp)
+            q = (len(x2) + 3) / 4
+            return x2[math.ceil(q) - 1] * (q - int(q)) + x2[math.floor(q) - 1] * (1 - q + int(q))
+        except Exception as e:
+            print("Error : ", e)
+            return None
+
+    def quartile3(self, x):
+        try:
+            tmp = self.check_format(x)
+            x2 = np.sort(tmp)
+            q = (3*len(x2) + 1) / 4
+            return x2[math.ceil(q) - 1] * (q - int(q)) + x2[math.floor(q) - 1] * (1 - q + int(q))
         except Exception as e:
             print("Error : ", e)
             return None
