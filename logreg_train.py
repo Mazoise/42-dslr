@@ -3,6 +3,7 @@ import numpy as np
 from my_logistic_regression import MyLogisticRegression as MyLr
 import sys
 from FileLoader import FileLoader
+import math
 
 try:
     assert len(sys.argv) > 1, "Input Error: missing argument"
@@ -13,18 +14,32 @@ try:
     # Slyth = np.array(df[["Divination"]]).reshape(-1, 1)
     # Gryff = np.array(df[["History of Magic", "Flying", "Transfiguration"]]).reshape(-1, 1)
     data = {
-        'Ravenclaw' : np.array(df[["Charms"]]).reshape(-1, 1),
-        'Slytherin' : np.array(df[["Divination"]]).reshape(-1, 1),
-        'Gryffindor' : np.array(df[["Flying"]]).reshape(-1, 1)
+        'Ravenclaw' : "Charms",
+        'Slytherin' : "Divination",
+        'Gryffindor' : "Flying"
     }
-    for i in ['Gryffindor', 'Ravenclaw', 'Slytherin']:
-        myLR = MyLr(np.array([[1.0], [1.0]]), 1, 500000)
-        house =  np.array(Houses[i], dtype=float).reshape(-1, 1)
-        myLR.fit_(data[i], house)
+    for i in ['Slytherin', 'Gryffindor', 'Ravenclaw']:
+        myLR = MyLr(np.array([[1.0], [1.0]]), 1, 5000)
+        tmp = pd.concat([Houses[i], df[[data[i]]]], axis=1).dropna()
+        house =  np.array(tmp[i], dtype=float).reshape(-1, 1)
+        cycles = loss = old_loss = 0
+        x = myLR.minmax_(np.array(tmp[data[i]]).reshape(-1, 1))
+        # print(x)
+        while cycles < 100 or old_loss - loss > loss * 0.000001:
+            old_loss = loss
+            myLR.fit_(x, house)
+            if math.isnan(myLR.theta[0]):
+                print("Alpha :", myLR.alpha)
+                myLR.alpha *= 0.1
+                myLR.theta = np.array([[1.0], [1.0]])
+                loss = math.inf
+            else:
+                loss = myLR.loss_(myLR.predict_(x), house)
+            cycles += 1
         print(myLR.theta)
         model = { "thetas": myLR.theta.squeeze(), "bounds": myLR.bounds }
         modelDF = pd.DataFrame(data=model)
         modelDF.to_csv("model.csv")
-        myLR.plot_(data[i], house)
+        myLR.plot_(x, house)
 except Exception as e:
     print("Error: ", e)

@@ -2,6 +2,7 @@ from os import stat_result
 from tracemalloc import Statistic
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 
 class MyLogisticRegression():
@@ -60,7 +61,7 @@ class MyLogisticRegression():
             print("TypeError in log_loss")
             return None
         try:
-            print(self.loss_element_(y, y_hat, eps))
+            # print(self.loss_element_(y, y_hat, eps))
             return np.sum(self.loss_element_(y, y_hat, eps)) / y.shape[0]
         except Exception as e:
             print("Error in log_loss", e)
@@ -99,16 +100,38 @@ class MyLogisticRegression():
             return None
         try:
             for i in range(self.max_iter):
-                self.theta -= self.alpha * self.gradient_(x, y)
+                try:
+                    self.theta -= self.alpha * self.gradient_(x, y)
+                    if (math.isnan(self.theta[0])):
+                        return self.theta
+                except RuntimeWarning:
+                    self.theta[0] = math.nan
+                    return self.theta
         except Exception as e:
             print("Error in fit", e)
             return None
 
+    def minmax_(self, data):
+        if (type(data) != np.ndarray or len(data) == 0):
+            print("TypeError in minmax")
+            return None
+        try:
+            if self.bounds is None:
+                self.bounds = np.array([data.min(), data.max()])
+            print(self.bounds)
+            return (data - self.bounds[0]) / (self.bounds[1] - self.bounds[0])
+        except Exception as e:
+            print("Error in minmax: ", e)
+            return None
+
+    def reverse_minmax_(self, data):
+        return data * (self.bounds[1] - self.bounds[0]) + self.bounds[0]
+
     def plot_(self, x, y, xlabel="x", ylabel="y", units="units"):
-        plt.plot(x, y, '+',
+        plt.plot(x, y, 'o',
                  label="$s_{true}(" + units + ")$",
                  color="deepskyblue")
-        plt.plot(x, self.predict_(x), 'X',
+        plt.plot(x, self.predict_(x), '+',
                  color='limegreen',
                  label="$s_{predict}(" + units + ")$")
         plt.legend()
