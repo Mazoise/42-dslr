@@ -22,8 +22,6 @@ try:
         house =  np.array(tmp[i], dtype=float).reshape(-1, 1)
         cycles = loss = old_loss = 0
         x = myLR.minmax_(np.array(tmp[data[i]]).reshape(-1, 1))
-        # thetas = []
-        # bounds = []
         while cycles < 100 or old_loss - loss > loss * 0.000001:
             old_loss = loss
             myLR.fit_(x, house)
@@ -35,6 +33,7 @@ try:
             else:
                 loss = myLR.loss_(myLR.predict_(x), house)
             cycles += 1
+        myLR.plot_(x, house)
         modelDF = modelDF.append({"house":i, "theta0":myLR.theta.squeeze()[0], "theta1":myLR.theta.squeeze()[1], "min":myLR.bounds[0], "max":myLR.bounds[1]}, ignore_index=True)
     modelDF.to_csv("model.csv")
 except Exception as e:
