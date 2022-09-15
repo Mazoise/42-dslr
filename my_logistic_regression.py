@@ -118,7 +118,7 @@ class MyLogisticRegression():
         try:
             if self.bounds is None:
                 self.bounds = np.array([data.min(), data.max()])
-            print(self.bounds)
+            # print(self.bounds)
             return (data - self.bounds[0]) / (self.bounds[1] - self.bounds[0])
         except Exception as e:
             print("Error in minmax: ", e)
