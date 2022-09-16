@@ -79,6 +79,9 @@ class MyLogisticRegression():
             print("Error in predict", e)
             return None
 
+    def predict_1(self, x):
+            return self.sigmoid_(np.dot(np.array([1,x]), self.theta)).squeeze()
+
     def gradient_(self, x, y):
         if (type(x) is not np.ndarray or type(y) is not np.ndarray
         or type(self.theta) is not np.ndarray or x.size == 0 or y.size == 0
@@ -123,7 +126,8 @@ class MyLogisticRegression():
         except Exception as e:
             print("Error in minmax: ", e)
             return None
-
+    def minmax_1(self, data):
+        return (data - self.bounds[0]) / (self.bounds[1] - self.bounds[0])
     def reverse_minmax_(self, data):
         return data * (self.bounds[1] - self.bounds[0]) + self.bounds[0]
 
