@@ -10,10 +10,14 @@ try:
     fl = FileLoader()
     df = fl.load(sys.argv[1])
     Houses = pd.get_dummies(df["Hogwarts House"])
+    Houses['RavSlyth'] = Houses['Ravenclaw'] + Houses['Slytherin']
+    Houses['GryffSlyth'] = Houses['Gryffindor'] + Houses['Slytherin']
     data = {
         'Ravenclaw' : "Charms",
         'Slytherin' : "Divination",
-        'Gryffindor' : "Flying"
+        'Gryffindor' : "Flying",
+        'RavSlyth' : "Astronomy",
+        'GryffSlyth' : "Herbology"
     }
     modelDF = pd.DataFrame(columns=["house", "theta0", "theta1", "min", "max"])
     for i in data.keys():
