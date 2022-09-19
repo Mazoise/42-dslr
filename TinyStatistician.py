@@ -12,10 +12,6 @@ class TinyStatistician:
         assert type(x) == list or type(x) == np.ndarray, "not a list"
         assert len(x) > 0, "empty list"
         tmp = np.array(x, dtype=float)
-        if len(np.shape(tmp)) > 1:
-            assert (np.shape(tmp)[0] == 1 or np.shape(tmp)[1] == 1,
-                    "not a vector")
-            tmp = tmp.reshape(np.shape(tmp)[0] * np.shape(tmp)[1])
         assert isinstance(p, Number), "not a number"
         assert 0 <= p <= 100, "percentile out of range"
         return tmp

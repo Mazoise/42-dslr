@@ -8,7 +8,7 @@ try:
     fl = FileLoader()
     df = fl.load(sys.argv[1])
     courses = df.iloc[:, 6:].columns
-    print(courses)
+    assert df['Hogwarts House'].notnull().all(), "Data Error: \"Hogwarts House\" column has no value"
     fig, ax = plt.subplots(3, 4)
     for i in range(0, len(courses)):
         if (i != 1):

@@ -9,6 +9,7 @@ try:
     df = fl.load(sys.argv[1])
     courses = df.iloc[:, 6:].columns
     fig, ax = plt.subplots(3, 5)
+    assert df['Hogwarts House'].notnull().all(), "Data Error: \"Hogwarts House\" column has no value"
     for i in range(0, len(courses)):
         sns.histplot(data=df, x=courses[i], ax=ax[i//5][i%5], hue="Hogwarts House", palette="rocket", element="step")
     plt.subplots_adjust(left=0.04, right=0.99, top=0.99, bottom=0.06)

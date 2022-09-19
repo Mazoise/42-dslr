@@ -3,12 +3,12 @@ import numpy as np
 from my_logistic_regression import MyLogisticRegression as MyLr
 import sys
 from FileLoader import FileLoader
-import math
 
 try:
     assert len(sys.argv) > 1, "Input Error: missing argument"
     fl = FileLoader()
     df = fl.load(sys.argv[1])
+    assert df['Hogwarts House'].notnull().all(), "Data Error: \"Hogwarts House\" column has no value"
     Houses = pd.get_dummies(df["Hogwarts House"])
     Houses['Ravenclaw or Slytherin'] = Houses['Ravenclaw'] + Houses['Slytherin']
     Houses['Gryffindor or Slytherin'] = Houses['Gryffindor'] + Houses['Slytherin']
