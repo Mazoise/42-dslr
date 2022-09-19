@@ -3,14 +3,12 @@ from TinyStatistician import TinyStatistician
 import sys
 import pandas as pd
 import numpy as np
-import statistics
 
 try:
     assert len(sys.argv) > 1, "Input Error: missing argument"
     fl = FileLoader()
     df = fl.load(sys.argv[1])
     df.dropna(axis=1, how='all', inplace=True)
-    # df.reset_index(drop=True, inplace=True)
     numerics = ['int16', 'int32', 'int64',
                 'float16', 'float32', 'float64']
     numdata = df.select_dtypes(include=numerics).columns
@@ -35,7 +33,7 @@ try:
         # stats.loc['50%2', col] = np.percentile(data, 50)
         # stats.loc['75%2', col] = np.percentile(data, 75)
         # stats.loc['Max2', col] = np.max(data)
-
+    pd.options.display.float_format = '{:,.6f}'.format
     fl.display(stats, stats.shape[0])
 except Exception as e:
     print(e)
